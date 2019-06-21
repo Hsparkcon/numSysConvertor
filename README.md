@@ -20,3 +20,6 @@ If a user gives '0' as a target, it will display the output in following systems
 -> Hexadecimal
 	
   The system handles whole number and fraction number.
+  
+  In addition, this repository includes process of understanding how to use GitHub.
+  The code or the commit history can be look weird.
