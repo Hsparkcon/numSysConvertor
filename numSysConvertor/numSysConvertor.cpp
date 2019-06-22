@@ -1,7 +1,65 @@
 #include "numSysConvertor.h"
 
 numSysConvertor::numSysConvertor() {
+
 	inputValue;
+
+	MatchList_IntToChar = {
+		{0, '0'},
+		{1, '1'},
+		{2, '2'},
+		{3, '3'},
+		{4, '4'},
+		{5, '5'},
+		{6, '6'},
+		{7, '7'},
+		{8, '8'},
+		{9, '9'},
+		{10, 'A'},
+		{11, 'B'},
+		{12, 'C'},
+		{13, 'D'},
+		{14, 'E'},
+		{15, 'F'}
+	};
+
+	MatchList_CharToInt = {
+		{'0', 0},
+		{'1', 1},
+		{'2', 2},
+		{'3', 3},
+		{'4', 4},
+		{'5', 5},
+		{'6', 6},
+		{'7', 7},
+		{'8', 8},
+		{'9', 9},
+		{'a', 10},
+		{'b', 11},
+		{'c', 12},
+		{'d', 13},
+		{'e', 14},
+		{'f', 15},
+		{'A', 10},
+		{'B', 11},
+		{'C', 12},
+		{'D', 13},
+		{'E', 14},
+		{'F', 15}
+	};
+
+	resultList = {
+		{2, {"Binary:		", "0"}},
+		{3, {"Ternary:		", "0"}},
+		{4, {"Quaternary:", "0"}},
+		{5, {"Quinary:		", "0"}},
+		{6, {"Senary:		", "0"}},
+		{8, {"Octal:		", "0"}},
+		{10, {"Decimal:		", "0"}},
+		{12, {"Duodecimal:	", "0"}},
+		{16, {"Hexadecimal:	", "0"}}
+	};	
+	
 	numList_Whole;
 	numList_Fraction;
 
@@ -177,139 +235,32 @@ void numSysConvertor::numSysIdentifier() {
 }
 
 char numSysConvertor::numTypeConvertor_IntToChar(int input) {
-
 	char indentifiedVal = NULL;
+	map<int, char>::iterator itMap;
 
-	switch (input) {
-	case 0:
-		indentifiedVal = '0';
-		break;
-	case 1:
-		indentifiedVal = '1';
-		break;
-	case 2:
-		indentifiedVal = '2';
-		break;
-	case 3:
-		indentifiedVal = '3';
-		break;
-	case 4:
-		indentifiedVal = '4';
-		break;
-	case 5:
-		indentifiedVal = '5';
-		break;
-	case 6:
-		indentifiedVal = '6';
-		break;
-	case 7:
-		indentifiedVal = '7';
-		break;
-	case 8:
-		indentifiedVal = '8';
-		break;
-	case 9:
-		indentifiedVal = '9';
-		break;
-	case 10:
-		indentifiedVal = 'A';
-		break;
-	case 11:
-		indentifiedVal = 'B';
-		break;
-	case 12:
-		indentifiedVal = 'C';
-		break;
-	case 13:
-		indentifiedVal = 'D';
-		break;
-	case 14:
-		indentifiedVal = 'E';
-		break;
-	case 15:
-		indentifiedVal = 'F';
-		break;
-	default:
+	itMap = MatchList_IntToChar.find(input);
+
+	if (itMap != MatchList_IntToChar.end()) {
+		indentifiedVal = itMap->second;
+	}
+	else {
 		cout << "Unexpected Input detected :	" << input << endl;
 	}
 
 	return indentifiedVal;
-
 }
 
 int numSysConvertor::numTypeConvertor_CharToInt(char input) {
-
 	int indentifiedVal = NULL;
+	map<char, int>::iterator itMap;
 
-	switch (input) {
-	case '0':
-		indentifiedVal = 0;
-		break;
-	case '1':
-		indentifiedVal = 1;
-		break;
-	case '2':
-		indentifiedVal = 2;
-		break;
-	case '3':
-		indentifiedVal = 3;
-		break;
-	case '4':
-		indentifiedVal = 4;
-		break;
-	case '5':
-		indentifiedVal = 5;
-		break;
-	case '6':
-		indentifiedVal = 6;
-		break;
-	case '7':
-		indentifiedVal = 7;
-		break;
-	case '8':
-		indentifiedVal = 8;
-		break;
-	case '9':
-		indentifiedVal = 9;
-		break;
-	case 'a':
-		indentifiedVal = 10;
-		break;
-	case 'b':
-		indentifiedVal = 11;
-		break;
-	case 'c':
-		indentifiedVal = 12;
-		break;
-	case 'd':
-		indentifiedVal = 13;
-		break;
-	case 'e':
-		indentifiedVal = 14;
-		break;
-	case 'f':
-		indentifiedVal = 15;
-		break;
-	case 'A':
-		indentifiedVal = 10;
-		break;
-	case 'B':
-		indentifiedVal = 11;
-		break;
-	case 'C':
-		indentifiedVal = 12;
-		break;
-	case 'D':
-		indentifiedVal = 13;
-		break;
-	case 'E':
-		indentifiedVal = 14;
-		break;
-	case 'F':
-		indentifiedVal = 15;
-		break;
-	default:
-		cout << "Unexpected Input detected :	" << indentifiedVal << endl;
+	itMap = MatchList_CharToInt.find(input);
+
+	if (itMap != MatchList_CharToInt.end()) {
+		indentifiedVal = itMap->second;
+	}
+	else {
+		cout << "Unexpected Input detected :	" << input << endl;
 	}
 
 	return indentifiedVal;
@@ -330,12 +281,23 @@ void numSysConvertor::convertor() {
 			numSys_Target = numSysToDisplay[i];
 			convertorWDecimal();
 			convertorFDecimal();
-			resultDisplay();
+
+			if (!numList_Whole.empty()) {
+				outputValue = numList_Whole;
+			}
+			else {
+				outputValue = '0';
+			}
+
+			if (!numList_Fraction.empty()) {
+				outputValue = outputValue + '.' + numList_Fraction;
+			}
+
+			resultList[numSys_Target][1] = outputValue;
 
 			numList_Whole.clear();
 			numList_Fraction.clear();
 		}
-		dataReset();
 	}
 }
 
@@ -350,6 +312,8 @@ void numSysConvertor::convertorWDecimal() {
 	int tempRemainder;
 	char indentifiedVal;
 
+	map<int, char>::iterator itMap;
+
 	while (convertingVal != 0) {
 		tempRemainder = convertingVal % targetingSys;
 		convertingVal = convertingVal / targetingSys;
@@ -358,63 +322,18 @@ void numSysConvertor::convertorWDecimal() {
 
 	while (!tempResult.empty()){
 
-		switch (tempResult.back()) {
-		case 0:
-			indentifiedVal = '0';
-			break;
-		case 1:
-			indentifiedVal = '1';
-			break;
-		case 2:
-			indentifiedVal = '2';
-			break;
-		case 3:
-			indentifiedVal = '3';
-			break;
-		case 4:
-			indentifiedVal = '4';
-			break;
-		case 5:
-			indentifiedVal = '5';
-			break;
-		case 6:
-			indentifiedVal = '6';
-			break;
-		case 7:
-			indentifiedVal = '7';
-			break;
-		case 8:
-			indentifiedVal = '8';
-			break;
-		case 9:
-			indentifiedVal = '9';
-			break;
-		case 10:
-			indentifiedVal = 'A';
-			break;
-		case 11:
-			indentifiedVal = 'B';
-			break;
-		case 12:
-			indentifiedVal = 'C';
-			break;
-		case 13:
-			indentifiedVal = 'D';
-			break;
-		case 14:
-			indentifiedVal = 'E';
-			break;
-		case 15:
-			indentifiedVal = 'F';
-			break;
-		default:
+		itMap = MatchList_IntToChar.find(tempResult.back());
+
+		if (itMap != MatchList_IntToChar.end()) {
+			indentifiedVal = itMap->second;
+		}
+		else {
 			cout << "Unexpected Input detected :	" << tempResult.back() << endl;
 		}
 
 		numList_Whole.push_back(indentifiedVal);
 		tempResult.pop_back();
 	}
-
 }
 
 void numSysConvertor::convertorFDecimal() {
@@ -433,21 +352,11 @@ void numSysConvertor::convertorFDecimal() {
 
 void numSysConvertor::resultDisplay() const {
 	cout << "Input :	" << inputValue << endl;
+	cout << "result :	" << endl;
 
-	cout << "Result:	";
-	if (!numList_Whole.empty()) {
-		for (auto i : numList_Whole) {
-			cout << i;
-		}
+	for (auto i : resultList) {
+		cout << i.second[0] << i.second[1] << endl;
 	}
-
-	if (!numList_Fraction.empty()) {
-		cout << '.';
-		for (auto i : numList_Fraction) {
-			cout << i;
-		}
-	}
-	cout << endl;
 	cout << endl;
 }
 

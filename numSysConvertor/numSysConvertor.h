@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <vector>
+#include <map>
 #include <string>
 #include <algorithm>
 #include <cstdlib>
@@ -11,16 +12,15 @@
 using namespace std;
 
 class numSysConvertor {
+
 public:
 	numSysConvertor();
 	~numSysConvertor();
 
 	void inputReceiver();
-
 	void convertor();
-
-	void resultDisplay() const;
-	
+	void resultDisplay() const;	
+	void dataReset();
 
 private:
 	void inputIdentifier();
@@ -32,12 +32,16 @@ private:
 	void convertorWDecimal();
 	void convertorFDecimal();
 
-	void dataReset();
 
-	string	inputValue;
 
-	vector<char> numList_Whole;
-	vector<char> numList_Fraction;
+	string inputValue;
+	string outputValue;
+	string numList_Whole;
+	string numList_Fraction;
+
+	map<int, vector<string>> resultList;
+	map<int, char> MatchList_IntToChar;
+	map<char, int> MatchList_CharToInt;
 
 	int		inputWhole;
 	float	inputFraction;
