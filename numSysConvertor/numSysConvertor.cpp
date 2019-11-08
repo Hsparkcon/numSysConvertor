@@ -49,15 +49,15 @@ numSysConvertor::numSysConvertor() {
 	};
 
 	resultList = {
-		{2, {"Binary:		", "0"}},
-		{3, {"Ternary:		", "0"}},
-		{4, {"Quaternary:", "0"}},
-		{5, {"Quinary:		", "0"}},
-		{6, {"Senary:		", "0"}},
-		{8, {"Octal:		", "0"}},
-		{10, {"Decimal:		", "0"}},
-		{12, {"Duodecimal:	", "0"}},
-		{16, {"Hexadecimal:	", "0"}}
+		{2,  {"Binary:       ", "0"}},
+		{3,  {"Ternary:      ", "0"}},
+		{4,  {"Quaternary:   ", "0"}},
+		{5,  {"Quinary:      ", "0"}},
+		{6,  {"Senary:       ", "0"}},
+		{8,  {"Octal:        ", "0"}},
+		{10, {"Decimal:      ", "0"}},
+		{12, {"Duodecimal:   ", "0"}},
+		{16, {"Hexadecimal:  ", "0"}}
 	};	
 	
 	numList_Whole;
@@ -94,8 +94,8 @@ void numSysConvertor::inputReceiver() {
 
 void numSysConvertor::inputIdentifier() {
 	int currDegree = 0;
-	double currVal = 0;
-	double numMulti = 0;
+	int currVal = 0;
+	int numMulti = 0;
 
 	string numWhole;
 	string numFraction;
@@ -123,7 +123,7 @@ void numSysConvertor::inputIdentifier() {
 		cout << "Input : " << numWhole.back() << endl;
 		cout << "Return: " << currVal << endl;
 
-		if (currVal > numSys_Original - 1) {
+		if (currVal > numSys_Original - static_cast<int>(1)) {
 			cout << "Input mismatch:	" << currVal << endl;
 		}
 		
@@ -132,13 +132,14 @@ void numSysConvertor::inputIdentifier() {
 		numMulti = pow(numSys_Original, currDegree);
 		inputWhole = inputWhole + currVal * numMulti;
 		currDegree = currDegree + 1;
+
 	}
 
 	while (!numFraction.empty()) {
 
 		currVal = numTypeConvertor_CharToInt(numFraction.back());
 
-		if (currVal > numSys_Original - 1) {
+		if (currVal > numSys_Original - static_cast<int>(1)) {
 			cout << "Input mismatch:	" << currVal << endl;
 		}
 
@@ -271,8 +272,20 @@ void numSysConvertor::convertor() {
 	if (displayALL == false) {
 		convertorWDecimal();
 		convertorFDecimal();
-		resultDisplay();
-		dataReset();
+
+		if (!numList_Whole.empty()) {
+			outputValue = numList_Whole;
+		}
+		else {
+			outputValue = '0';
+		}
+
+		if (!numList_Fraction.empty()) {
+			outputValue = outputValue + '.' + numList_Fraction;
+		}
+
+		resultList[numSys_Target][1] = outputValue;
+
 	}
 	else {
 		int numSysToDisplay[9] = { 2, 3, 4, 5, 6, 8, 10, 12, 16};
@@ -332,6 +345,7 @@ void numSysConvertor::convertorWDecimal() {
 		}
 
 		numList_Whole.push_back(indentifiedVal);
+
 		tempResult.pop_back();
 	}
 }
@@ -351,13 +365,20 @@ void numSysConvertor::convertorFDecimal() {
 }
 
 void numSysConvertor::resultDisplay() const {
-	cout << "Input :	" << inputValue << endl;
+	cout << "Input :	" << inputValue << "	" << numSys_Original << endl;
 	cout << "result :	" << endl;
 
-	for (auto i : resultList) {
-		cout << i.second[0] << i.second[1] << endl;
+
+	if (displayALL) {
+		for (auto i : resultList) {
+			cout << i.second[0] << i.second[1] << endl;
+		}
+		cout << endl;
 	}
-	cout << endl;
+	else {
+		auto iter = resultList.find(numSys_Target);
+		cout << iter->second[0] << iter->second[1] << endl;
+	}
 }
 
 void numSysConvertor::dataReset() {
