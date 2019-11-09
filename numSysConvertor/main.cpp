@@ -2,10 +2,15 @@
 
 int main() {
 	int checker = NULL;
+	bool inputChecker = false;
 	numSysConvertor numConvertor;
 
 	while (1) {
-		numConvertor.inputReceiver();
+
+		do {
+			inputChecker = numConvertor.inputReceiver();
+		} while (!inputChecker);
+
 		numConvertor.convertor();
 		numConvertor.resultDisplay();
 		numConvertor.dataReset();

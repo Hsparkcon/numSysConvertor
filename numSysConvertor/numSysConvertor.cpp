@@ -2,8 +2,6 @@
 
 numSysConvertor::numSysConvertor() {
 
-	inputValue;
-
 	MatchList_IntToChar = {
 		{0, '0'},
 		{1, '1'},
@@ -49,17 +47,18 @@ numSysConvertor::numSysConvertor() {
 	};
 
 	resultList = {
-		{2,  {"Binary:       ", "0"}},
-		{3,  {"Ternary:      ", "0"}},
-		{4,  {"Quaternary:   ", "0"}},
-		{5,  {"Quinary:      ", "0"}},
-		{6,  {"Senary:       ", "0"}},
-		{8,  {"Octal:        ", "0"}},
-		{10, {"Decimal:      ", "0"}},
-		{12, {"Duodecimal:   ", "0"}},
-		{16, {"Hexadecimal:  ", "0"}}
+		{2, {"Binary", "0"}},
+		{3, {"Ternary", "0"}},
+		{4, {"Quaternary", "0"}},
+		{5, {"Quinary", "0"}},
+		{6, {"Senary", "0"}},
+		{8, {"Octal", "0"}},
+		{10,{"Decimal", "0"}},
+		{12, {"Duodecimal", "0"}},
+		{16, {"Hexadecimal", "0"}}
 	};	
 	
+	inputValue;
 	numList_Whole;
 	numList_Fraction;
 
@@ -76,7 +75,7 @@ numSysConvertor::~numSysConvertor() {
 	cout << "see you" << endl;
 }
 
-void numSysConvertor::inputReceiver() {
+bool numSysConvertor::inputReceiver() {
 
 	cout << "Please enter a value" << endl;
 	cin >> inputValue;
@@ -88,44 +87,51 @@ void numSysConvertor::inputReceiver() {
 	cin >> numSys_Target;
 	cout << endl;
 
-	inputIdentifier();
-	numSysIdentifier();
+	if (!numSysIdentifier(numSys_Original, numSys_Target)) {
+		std::cout << "Please check entered numeric system." << std::endl;
+		return false;
+	}
+
+	if (!valueIdentifier()) {
+		std::cout << "Please check the entered value to be converted." << std::endl;
+		return false;
+	}
+
+	return true;
+
 }
 
-void numSysConvertor::inputIdentifier() {
+bool numSysConvertor::valueIdentifier() {
 	int currDegree = 0;
-	int currVal = 0;
-	int numMulti = 0;
+	double currVal = 0;
+	double numMulti = 0;
 
 	string numWhole;
 	string numFraction;
-
 	size_t floatingPoint = inputValue.find('.');
 
 	if (floatingPoint != string::npos) {
 		numWhole = inputValue.substr(0, floatingPoint);
 		numFraction = inputValue.substr(floatingPoint + 1);
 
-		cout << "Whole Number:	" << numWhole << endl;
-		cout << "Fraction Number:	" << numFraction << endl;
-		cout << endl;
+		//cout << "Whole Number:    " << numWhole << endl;
+		//cout << "Fraction Number: " << numFraction << endl;
+		//cout << endl;
+
 	}
 	else {
 		numWhole = inputValue;
-		cout << "Whole Number:	" << numWhole << endl;
-		cout << endl;
+		
+		//cout << "Whole Number:	" << numWhole << endl;
+		//cout << endl;
+
 	}
 
 	while (!numWhole.empty()) {
 
 		currVal = numTypeConvertor_CharToInt(numWhole.back());
 
-		cout << "Input : " << numWhole.back() << endl;
-		cout << "Return: " << currVal << endl;
-
-		if (currVal > numSys_Original - static_cast<int>(1)) {
-			cout << "Input mismatch:	" << currVal << endl;
-		}
+		if (static_cast<int>(currVal) == -1) {	return false;	}
 		
 		numWhole.pop_back();
 
@@ -139,9 +145,7 @@ void numSysConvertor::inputIdentifier() {
 
 		currVal = numTypeConvertor_CharToInt(numFraction.back());
 
-		if (currVal > numSys_Original - static_cast<int>(1)) {
-			cout << "Input mismatch:	" << currVal << endl;
-		}
+		if (static_cast<int>(currVal) == -1) {	return false;	}
 
 		currDegree = numFraction.size();
 		numMulti = pow(numSys_Original, -1 * currDegree);
@@ -150,89 +154,68 @@ void numSysConvertor::inputIdentifier() {
 		numFraction.pop_back();
 	}
 
+	return true;
 }
 
-void numSysConvertor::numSysIdentifier() {
+bool numSysConvertor::numSysIdentifier(int originalSys, int targetedSys) {
+	if (originalSys == targetedSys) {
+		std::cout << "numeric system of entered value is same as targeted system." << std::endl;
+		return false;
+	}
 
-	string inputCheck_Ori;
-	string inputCheck_Tar;
-
-	switch (numSys_Original) {
+	switch (originalSys) {
 	case 2:
-		inputCheck_Ori = "Binary";
 		break;
 	case 3:
-		inputCheck_Ori = "Ternary";
 		break;
 	case 4:
-		inputCheck_Ori = "Quaternary";
 		break;
 	case 5:
-		inputCheck_Ori = "Quinary";
 		break;
 	case 6:
-		inputCheck_Ori = "Senary";
 		break;
 	case 8:
-		inputCheck_Ori = "Octal";
 		break;
 	case 10:
-		inputCheck_Ori = "Decimal";
 		break;
 	case 12:
-		inputCheck_Ori = "Duodecimal";
 		break;
 	case 16:
-		inputCheck_Ori = "Hexadecimal";
 		break;
 	default:
-		cout << "Incorrect Input is identified" << endl;
+		std::cout << "ERROR in entered numeric system of original value." << std::endl;
+		return false;
 	}
 
-	switch (numSys_Target) {
-		case 0:
-			inputCheck_Tar = "Display ALL";
-			displayALL = true;
-			break;
-		case 2:
-			inputCheck_Tar = "Binary";
-			break;
-		case 3:
-			inputCheck_Tar = "Ternary";
-			break;
-		case 4:
-			inputCheck_Tar = "Quaternary";
-			break;
-		case 5:
-			inputCheck_Tar = "Quinary";
-			break;
-		case 6:
-			inputCheck_Tar = "Senary";
-			break;
-		case 8:
-			inputCheck_Tar = "Octal";
-			break;
-		case 10:
-			inputCheck_Tar = "Decimal";
-			break;
-		case 12:
-			inputCheck_Tar = "Duodecimal";
-			break;
-		case 16:
-			inputCheck_Tar = "Hexadecimal";
-			break;
-		default:
-			cout << "Incorrect Input is identified" << endl;
+	switch (targetedSys) {
+	case 0:
+		displayALL = true;
+		break;
+	case 2:
+		break;
+	case 3:
+		break;
+	case 4:
+		break;
+	case 5:
+		break;
+	case 6:
+		break;
+	case 8:
+		break;
+	case 10:
+		break;
+	case 12:
+		break;
+	case 16:
+		break;
+	default:
+		std::cout << "ERROR in entered targeted numeric system." << std::endl;
+		return false;
 	}
 
-	if (numSys_Original != numSys_Target) {
-		cout << "Numerical System of Input :	" << inputCheck_Ori << endl;
-		cout << "Numerical System of Target:	" << inputCheck_Tar << endl;
-	}
-	else {
-		cout << "Error, conversion between same system cannot be performed" << endl;
-	}
-	cout << endl;
+	return true;
+
 }
 
 char numSysConvertor::numTypeConvertor_IntToChar(int input) {
@@ -247,38 +230,36 @@ char numSysConvertor::numTypeConvertor_IntToChar(int input) {
 	else {
 		cout << "Unexpected Input detected :	" << input << endl;
 	}
-
 	return indentifiedVal;
 }
 
 int numSysConvertor::numTypeConvertor_CharToInt(char input) {
-	int indentifiedVal = NULL;
-	map<char, int>::iterator itMap;
-
-	itMap = MatchList_CharToInt.find(input);
+	auto itMap = MatchList_CharToInt.find(input);
 
 	if (itMap != MatchList_CharToInt.end()) {
-		indentifiedVal = itMap->second;
-	}
-	else {
-		cout << "Unexpected Input detected :	" << input << endl;
-	}
 
-	return indentifiedVal;
+		if (itMap->second > numSys_Original - static_cast<int>(1)) {
+			cout 
+				<< "Error in input value - " 
+				<< input 
+				<< " cannot be appeared in " 
+				<< resultList.find(numSys_Original)->second[0]
+				<< std::endl;
 
+			return -1;
+		}
+			   
+	}
+	return itMap->second;
 }
 
 void numSysConvertor::convertor() {
+
 	if (displayALL == false) {
 		convertorWDecimal();
 		convertorFDecimal();
 
-		if (!numList_Whole.empty()) {
-			outputValue = numList_Whole;
-		}
-		else {
-			outputValue = '0';
-		}
+		outputValue = numList_Whole.empty() ? "0" : numList_Whole;
 
 		if (!numList_Fraction.empty()) {
 			outputValue = outputValue + '.' + numList_Fraction;
@@ -286,8 +267,8 @@ void numSysConvertor::convertor() {
 
 		resultList[numSys_Target][1] = outputValue;
 
-	}
-	else {
+	} else {
+
 		int numSysToDisplay[9] = { 2, 3, 4, 5, 6, 8, 10, 12, 16};
 
 		for (int i = 0; i < 9; i++) {
@@ -295,15 +276,10 @@ void numSysConvertor::convertor() {
 			convertorWDecimal();
 			convertorFDecimal();
 
-			if (!numList_Whole.empty()) {
-				outputValue = numList_Whole;
-			}
-			else {
-				outputValue = '0';
-			}
+			outputValue = numList_Whole.empty() ? "0" : numList_Whole;
 
-			if (!numList_Fraction.empty()) {
-				outputValue = outputValue + '.' + numList_Fraction;
+			if (!numList_Fraction.empty()) { 
+				outputValue = outputValue + '.' + numList_Fraction; 
 			}
 
 			resultList[numSys_Target][1] = outputValue;
@@ -355,7 +331,7 @@ void numSysConvertor::convertorFDecimal() {
 	int limit = 0;
 
 	while (convertingVal > 0 && limit < 8) {
-		numList_Fraction.push_back(numTypeConvertor_IntToChar((int)convertingVal));
+		numList_Fraction.push_back(numTypeConvertor_IntToChar(static_cast<int>(convertingVal)));
 
 		limit = limit + 1;
 
@@ -365,19 +341,21 @@ void numSysConvertor::convertorFDecimal() {
 }
 
 void numSysConvertor::resultDisplay() const {
-	cout << "Input :	" << inputValue << "	" << numSys_Original << endl;
+	cout << "Input :	" << inputValue << "	" << resultList.find(numSys_Original)->second[0] << endl;
 	cout << "result :	" << endl;
 
 
 	if (displayALL) {
 		for (auto i : resultList) {
-			cout << i.second[0] << i.second[1] << endl;
+			cout.width(11);
+			cout << left <<  i.second[0] << " : " << i.second[1] << endl;
 		}
 		cout << endl;
 	}
 	else {
 		auto iter = resultList.find(numSys_Target);
-		cout << iter->second[0] << iter->second[1] << endl;
+		cout.width(11);
+		cout << left << iter->second[0] << " : " << iter->second[1] << endl;
 	}
 }
 

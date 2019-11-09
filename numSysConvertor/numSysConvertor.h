@@ -2,9 +2,10 @@
 #define _NUMSYSCONVERTOR_H_
 
 #include <iostream>
+#include <iomanip>
+#include <string>
 #include <vector>
 #include <map>
-#include <string>
 #include <algorithm>
 #include <cstdlib>
 #include <cmath>
@@ -17,14 +18,14 @@ public:
 	numSysConvertor();
 	~numSysConvertor();
 
-	void inputReceiver();
+	bool inputReceiver();
 	void convertor();
 	void resultDisplay() const;	
 	void dataReset();
 
 private:
-	void inputIdentifier();
-	void numSysIdentifier();
+	bool valueIdentifier();
+	bool numSysIdentifier(int orginalSys, int targetedSys);
 
 	char numTypeConvertor_IntToChar(int input);
 	int  numTypeConvertor_CharToInt(char input);
