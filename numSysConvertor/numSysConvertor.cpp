@@ -75,6 +75,17 @@ numSysConvertor::~numSysConvertor() {
 	cout << "see you" << endl;
 }
 
+/*
+	This method...
+		receives inputs - Value and Numeric System of the input and targeted Numeric System.
+		calls method numSysIdentifier() to check the entered numeric systems are
+			- one of Binary, Ternary, Quaternary, Quinary, Senary, Octal, Decimal, Duodecimal, Hexadecimal
+			- original and targeted system are not equal.
+		calls method valueIdentifier() to check the entered value
+			- matched with 
+	};
+
+*/
 bool numSysConvertor::inputReceiver() {
 
 	cout << "Please enter a value" << endl;
